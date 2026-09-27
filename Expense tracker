@@ -1,0 +1,227 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+class Expense
+{
+public:
+    int id;
+    string category;
+    double amount;
+    string date;
+
+    Expense(int i, string c, double a, string d)
+    {
+        id = i;
+        category = c;
+        amount = a;
+        date = d;
+    }
+};
+
+class ExpenseManager
+{
+private:
+    vector<Expense> expenses;
+    int nextId = 1;
+
+public:
+
+    void addExpense()
+    {
+        string category, date;
+        double amount;
+
+        cout << "\nEnter category: ";
+        cin >> category;
+
+        cout << "Enter amount: ";
+        cin >> amount;
+
+        if (amount <= 0)
+        {
+            cout << "Invalid amount!\n";
+            return;
+        }
+
+        cout << "Enter date (DD/MM/YYYY): ";
+        cin >> date;
+
+        expenses.push_back(Expense(nextId, category, amount, date));
+
+        cout << "Expense added successfully!\n";
+        cout << "Expense ID: " << nextId << endl;
+
+        nextId++;
+    }
+
+    void displayExpenses()
+    {
+        if (expenses.empty())
+        {
+            cout << "\nNo expenses found.\n";
+            return;
+        }
+
+        cout << "\n---------------- EXPENSES ----------------\n";
+
+        cout << left
+             << setw(8) << "ID"
+             << setw(15) << "Category"
+             << setw(12) << "Amount"
+             << setw(15) << "Date" << endl;
+
+        cout << "--------------------------------------------\n";
+
+        for (const Expense &e : expenses)
+        {
+            cout << left
+                 << setw(8) << e.id
+                 << setw(15) << e.category
+                 << setw(12) << e.amount
+                 << setw(15) << e.date << endl;
+        }
+    }
+
+    void updateExpense()
+    {
+        if (expenses.empty())
+        {
+            cout << "\nNo expenses available to update.\n";
+            return;
+        }
+
+        int id;
+        cout << "\nEnter Expense ID to update: ";
+        cin >> id;
+
+        for (Expense &e : expenses)
+        {
+            if (e.id == id)
+            {
+                cout << "Enter new category: ";
+                cin >> e.category;
+
+                cout << "Enter new amount: ";
+                cin >> e.amount;
+
+                if (e.amount <= 0)
+                {
+                    cout << "Invalid amount!\n";
+                    return;
+                }
+
+                cout << "Enter new date: ";
+                cin >> e.date;
+
+                cout << "Expense updated successfully!\n";
+                return;
+            }
+        }
+
+        cout << "Expense ID not found.\n";
+    }
+
+    void deleteExpense()
+    {
+        if (expenses.empty())
+        {
+            cout << "\nNo expenses available to delete.\n";
+            return;
+        }
+
+        int id;
+        cout << "\nEnter Expense ID to delete: ";
+        cin >> id;
+
+        for (int i = 0; i < expenses.size(); i++)
+        {
+            if (expenses[i].id == id)
+            {
+                expenses.erase(expenses.begin() + i);
+
+                cout << "Expense deleted successfully!\n";
+                return;
+            }
+        }
+
+        cout << "Expense ID not found.\n";
+    }
+
+    void showTotal()
+    {
+        if (expenses.empty())
+        {
+            cout << "\nNo expenses recorded.\n";
+            return;
+        }
+
+        double total = 0;
+
+        for (const Expense &e : expenses)
+        {
+            total += e.amount;
+        }
+
+        cout << fixed << setprecision(2);
+        cout << "\nTotal Expense = Rs. " << total << endl;
+    }
+};
+
+int main()
+{
+    ExpenseManager manager;
+
+    int choice;
+
+    do
+    {
+        cout << "\n====================================\n";
+        cout << "       PERSONAL EXPENSE TRACKER\n";
+        cout << "====================================\n";
+
+        cout << "1. Add Expense\n";
+        cout << "2. Display Expenses\n";
+        cout << "3. Update Expense\n";
+        cout << "4. Delete Expense\n";
+        cout << "5. Show Total Expense\n";
+        cout << "6. Exit\n";
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            manager.addExpense();
+            break;
+
+        case 2:
+            manager.displayExpenses();
+            break;
+
+        case 3:
+            manager.updateExpense();
+            break;
+
+        case 4:
+            manager.deleteExpense();
+            break;
+
+        case 5:
+            manager.showTotal();
+            break;
+
+        case 6:
+            cout << "\nThank you for using Expense Tracker!\n";
+            break;
+
+        default:
+            cout << "\nInvalid choice! Please try again.\n";
+        }
+
+    } while (choice != 6);
+
+    return 0;
+}
